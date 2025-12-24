@@ -75,4 +75,4 @@ jobs:
     - name: Copia migrations para o diretório API
       run: cp -r migrations/ ./api/
     - name: Copying to server app01
-      run: rsync -avz ./api/* ${{ secrets.SSH_USER }}@${{ secrets.SERVER_APP_01 }}:/home/${{ secrets.SSH_USER }}/oauth2/
+      run: rsync -avz ./api/ ${{ secrets.SSH_USER }}@${{ secrets.SERVER_APP_01 }}:/home/${{ secrets.SSH_USER }}/oauth2/
