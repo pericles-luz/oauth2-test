@@ -1,0 +1,86 @@
+name: Checagem prévia
+
+on:
+  pull_request:
+    branches: [main, homologacao]
+
+env:
+  GITHUB: yes
+
+jobs:
+  send:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Golang with cache
+      uses: magnetikonline/action-golang-cache@v4
+      with:
+        go-version-file: go.mod
+        cache-key-suffix: sindireceita-api
+
+    - name: Install wkhtmltopdf
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install xfonts-75dpi xfonts-base
+        curl --silent --show-error --location --max-redirs 3 --fail --retry 3 --output wkhtmltopdf-linux-amd64.deb https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.bionic_amd64.deb
+        sudo dpkg -i wkhtmltopdf-linux-amd64.deb
+        sudo ldconfig
+        rm wkhtmltopdf-linux-amd64.deb
+
+    - name: Verify dependencies
+      run: go mod verify
+
+    - name: Install vulncheck
+      run: go install golang.org/x/vuln/cmd/govulncheck@latest
+
+    # - name: Run vulncheck
+    #   run: $(go env GOPATH)/bin/govulncheck ./...
+
+    - name: gerando configuração inicial de TESTE
+      run: echo "${{ secrets.CONFIG_TEST_INITIAL }}" > ./config/initial.json
+    - name: verificando configuração inicial de TESTE
+      run: echo "${{ secrets.CONFIG_TEST_INITIAL }}"
+    - name: gerando configuração de conexão com o banco de dados de AGNU de TESTE
+      run: echo "${{ secrets.CONFIG_TEST_AGNU_DB }}" > ./config/agnu.dev.json
+    - name: gerando configuração de conexão com o banco de dados geral de TESTE
+      run: echo "${{ secrets.CONFIG_TEST_MARIA_DB }}" > ./config/mariadb.dev.json
+    - name: gerando configuração do template WHATSAPP para alerta genérico
+      run: echo "${{ secrets.CONFIG_WHATSAPP_TEMPLATE_ALERTA }}" > ./config/whatsapp.template.alerta.json
+    - name: gerando configuração do template WHATSAPP para TOKEN de TESTE
+      run: echo "${{ secrets.CONFIG_TEST_WHATSAPP_TEMPLATE_TOKEN }}" > ./config/whatsapp.template.token.json
+    - name: gerando configuração do template WHATSAPP para TOKEN de TESTE
+      run: echo "${{ secrets.CONFIG_TEST_WHATSAPP_TEMPLATE_TOKEN }}" > ./config/whatsapp.template.token.test.json
+    - name: gerando configuração do link de DOCUMENTOS DAJ
+      run: echo "${{ secrets.CONFIG_DOCUMENTOS_DAJ }}" > ./config/documentos.daj.json
+    - name: gerando configuração do link de DOCUMENTOS DAJ IRPF
+      run: echo "${{ secrets.CONFIG_DOCUMENTOS_DAJ_IRPF }}" > ./config/documentos.daj.irpf.json
+    - name: gerando configuração do link de DOCUMENTOS DAJ RAV8X
+      run: echo "${{ secrets.CONFIG_DOCUMENTOS_DAJ_RAV8X }}" > ./config/documentos.daj.rav8x.json
+    - name: gerando configuração do link de DOCUMENTOS DAJ 28,86 BRASÍLIA
+      run: echo "${{ secrets.CONFIG_DOCUMENTOS_DAJ_2886_BRASILIA }}" > ./config/documentos.daj.2886.brasilia.json
+    - name: gerando configuração do link de DOCUMENTOS DAJ 28,86 FORTALEZA
+      run: echo "${{ secrets.CONFIG_DOCUMENTOS_DAJ_2886_FORTALEZA }}" > ./config/documentos.daj.2886.fortaleza.json
+    - name: verificando configuração inicial de TESTE
+      run: ls -la ./config
+    - name: Run go vet
+      run: go vet ./...
+
+    - name: Install staticcheck
+      run: go install honnef.co/go/tools/cmd/staticcheck@latest
+
+    - name: Run staticcheck
+      run: $(go env GOPATH)/bin/staticcheck ./...
+
+    # - name: Install golint
+    #   run: go install golang.org/x/lint/golint@latest
+
+    # - name: Run golint
+    #   run: $(go env GOPATH)/bin/golint ./...
+
+    - name: Run tests
+      run: go test -race -vet=off ./...
+
+    - name: Build
+      # run: go build -a -ldflags "-linkmode external -extldflags '-static' -s -w" -o crm-back-go/server
+      run: go build -v -o api/server

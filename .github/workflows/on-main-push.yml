@@ -1,0 +1,76 @@
+name: Deploy to servers
+
+on:
+  push:
+    branches: [master]
+
+env:
+  GITHUB: yes
+
+
+jobs:
+
+  send:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Golang with cache
+      uses: magnetikonline/action-golang-cache@v4
+      with:
+        go-version-file: go.mod
+        cache-key-suffix: oauth2-test-master
+
+    - name: Verify dependencies
+      run: go mod verify
+
+    - name: Run go vet
+      run: go vet ./...
+
+    - name: Install staticcheck
+      run: go install honnef.co/go/tools/cmd/staticcheck@latest
+
+    - name: Run staticcheck
+      run: $(go env GOPATH)/bin/staticcheck ./...
+
+    - name: Install vulncheck
+      run: go install golang.org/x/vuln/cmd/govulncheck@latest
+
+    - name: Run vulncheck
+      run: $(go env GOPATH)/bin/govulncheck ./...
+
+    - name: Install golint
+      run: go install golang.org/x/lint/golint@latest
+
+    - name: Run golint
+      run: $(go env GOPATH)/bin/golint ./...
+
+    - name: gerando configuração de ambiente
+      run: |
+        cat <<'EOF' > ./config/.env
+        ${{ secrets.CONFIG_ENV }}
+        EOF
+    - name: Run tests
+      run: go test -race -vet=off ./...
+
+    - name: Build
+      # descobrir como fazer o build para linux, usando linkmode external
+      # run: go build -a -ldflags "-linkmode external -extldflags '-static' -s -w" -o api/server
+      # run: go build -v -o api/server -ldflags "-X main.compilation=`date -u +.%Y%m%d.%H%M%S`"
+      run: go build -v -o api/server
+
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_NO_ROOT_KEY }}
+        known_hosts: ${{ secrets.SSH_KNOWN_BOTH }}
+
+    - name: Copia static para o diretório API
+      run: cp -r static/ ./api/
+    - name: Copia templates para o diretório API
+      run: cp -r templates/ ./api/
+
+    - name: Copia migrations para o diretório API
+      run: cp -r migrations/ ./api/
+    - name: Copying to server app01
+      run: rsync -avz ./api ${{ secrets.SSH_USER }}@${{ secrets.SERVER_APP_01 }}:/home/${{ secrets.SSH_USER }}/oauth2/
