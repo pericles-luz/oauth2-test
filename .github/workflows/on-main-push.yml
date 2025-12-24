@@ -57,7 +57,7 @@ jobs:
       # descobrir como fazer o build para linux, usando linkmode external
       # run: go build -a -ldflags "-linkmode external -extldflags '-static' -s -w" -o api/server
       # run: go build -v -o api/server -ldflags "-X main.compilation=`date -u +.%Y%m%d.%H%M%S`"
-      run: go build -v -o api/server
+      run: go build -v -o api/server ./cmd/server
 
     - name: Install SSH key
       uses: shimataro/ssh-key-action@v2
