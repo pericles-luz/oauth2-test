@@ -7,19 +7,24 @@ import (
 	"time"
 )
 
+// contextKey is a custom type for context keys to avoid collisions
+type contextKey string
+
+const isHTMXKey contextKey = "is_htmx"
+
 // HTMXMiddleware detects HTMX requests and adds context
 func HTMXMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		isHTMX := r.Header.Get("HX-Request") == "true"
-		ctx = context.WithValue(ctx, "is_htmx", isHTMX)
+		ctx = context.WithValue(ctx, isHTMXKey, isHTMX)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 
 // IsHTMXRequest checks if the current request is from HTMX
 func IsHTMXRequest(r *http.Request) bool {
-	if val, ok := r.Context().Value("is_htmx").(bool); ok {
+	if val, ok := r.Context().Value(isHTMXKey).(bool); ok {
 		return val
 	}
 	return false
