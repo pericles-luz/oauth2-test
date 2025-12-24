@@ -1,0 +1,26 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="page-header">
+    <h2>OIDC Discovery</h2>
+    <p>Documento de descoberta OpenID Connect (.well-known/openid-configuration)</p>
+    <a href="/dashboard" class="btn btn-secondary">← Voltar para Dashboard</a>
+</div>
+
+<div class="card">
+    <h3>OpenID Configuration</h3>
+    <pre class="code-block">{{.DiscoveryJSON}}</pre>
+</div>
+
+<div class="card mt-3">
+    <h3>Endpoints Descobertos</h3>
+    <ul>
+        {{if .Discovery.issuer}}<li><strong>Issuer:</strong> {{.Discovery.issuer}}</li>{{end}}
+        {{if .Discovery.authorization_endpoint}}<li><strong>Authorization:</strong> {{.Discovery.authorization_endpoint}}</li>{{end}}
+        {{if .Discovery.token_endpoint}}<li><strong>Token:</strong> {{.Discovery.token_endpoint}}</li>{{end}}
+        {{if .Discovery.userinfo_endpoint}}<li><strong>UserInfo:</strong> {{.Discovery.userinfo_endpoint}}</li>{{end}}
+        {{if .Discovery.jwks_uri}}<li><strong>JWKS:</strong> {{.Discovery.jwks_uri}}</li>{{end}}
+        {{if .Discovery.revocation_endpoint}}<li><strong>Revocation:</strong> {{.Discovery.revocation_endpoint}}</li>{{end}}
+    </ul>
+</div>
+{{end}}

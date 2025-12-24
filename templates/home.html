@@ -1,0 +1,91 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="page-header">
+    <h2>Configuração OAuth2</h2>
+    <p>Configure as credenciais do cliente OAuth2 para iniciar os testes.</p>
+</div>
+
+<div class="card">
+    <form hx-post="/config" hx-target="#config-result" hx-swap="innerHTML">
+        <div class="form-group">
+            <label for="client_id">Client ID *</label>
+            <input type="text" id="client_id" name="client_id" value="{{.ClientID}}" required>
+            <small>O identificador público do seu aplicativo OAuth2</small>
+        </div>
+
+        <div class="form-group">
+            <label for="client_secret">Client Secret *</label>
+            <input type="password" id="client_secret" name="client_secret" value="{{.ClientSecret}}" required>
+            <small>A chave secreta do seu aplicativo (mantenha seguro!)</small>
+        </div>
+
+        <div class="form-group">
+            <label for="redirect_uri">Redirect URI *</label>
+            <input type="url" id="redirect_uri" name="redirect_uri"
+                   value="{{if .RedirectURI}}{{.RedirectURI}}{{else}}http://localhost:8080/auth/callback{{end}}" required>
+            <small>URL de callback após autenticação (deve estar registrada no servidor OAuth2)</small>
+        </div>
+
+        <div class="form-group">
+            <label>Scopes *</label>
+            <div class="scopes-grid">
+                {{range .AvailableScopes}}
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scopes" value="{{.Value}}"
+                           {{if .Required}}checked disabled{{end}}>
+                    {{.Label}}
+                </label>
+                {{end}}
+            </div>
+            <small>Selecione as permissões que deseja solicitar</small>
+        </div>
+
+        <div class="form-group">
+            <label>Base URL do Servidor OAuth2</label>
+            <input type="text" value="{{.BaseURL}}" readonly>
+            <small>api.sindireceita.org.br</small>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar Configuração</button>
+    </form>
+
+    <div id="config-result" class="mt-3"></div>
+</div>
+
+<div class="card mt-3">
+    <h3>Informações</h3>
+    <p>Para obter credenciais OAuth2 (Client ID e Secret), entre em contato com:</p>
+    <p><strong>dti@sindireceita.org.br</strong></p>
+
+    <h4 class="mt-2">Scopes Disponíveis:</h4>
+    <ul>
+        <li><strong>openid</strong> - Obrigatório para OIDC</li>
+        <li><strong>profile</strong> - Nome, CPF e seccional do usuário</li>
+        <li><strong>email</strong> - Endereço de e-mail</li>
+        <li><strong>phone</strong> - Número de telefone</li>
+        <li><strong>address</strong> - Endereço completo</li>
+        <li><strong>membership</strong> - Status de filiação e tipo de vínculo</li>
+        <li><strong>permissions</strong> - Permissões e roles do usuário</li>
+        <li><strong>union_unit</strong> - Detalhes completos da seccional</li>
+    </ul>
+</div>
+
+<script>
+// Auto-collect checked scopes on form submit
+document.querySelector('form').addEventListener('submit', function(e) {
+    const checkboxes = document.querySelectorAll('input[name="scopes"]:checked');
+    const scopes = Array.from(checkboxes).map(cb => cb.value);
+
+    // Create hidden input with scopes
+    const existingInput = document.querySelector('input[name="scopes"][type="hidden"]');
+    if (existingInput) existingInput.remove();
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'scopes';
+    input.value = scopes.join(',');
+    this.appendChild(input);
+});
+</script>
+{{end}}

@@ -1,0 +1,41 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="page-header">
+    <h2>Histórico de Requisições HTTP</h2>
+    <p>Todas as requisições OAuth2 capturadas para debug.</p>
+</div>
+
+<div class="card">
+    {{if .Entries}}
+    <table class="history-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Data/Hora</th>
+                <th>Método</th>
+                <th>Endpoint</th>
+                <th>Status</th>
+                <th>Duração</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Entries}}
+            <tr>
+                <td>{{.ID}}</td>
+                <td>{{.CreatedAt.Format "02/01/2006 15:04:05"}}</td>
+                <td><span class="method method-{{.RequestMethod}}">{{.RequestMethod}}</span></td>
+                <td><span class="endpoint-type">{{.EndpointType}}</span></td>
+                <td><span class="status status-{{if lt .ResponseStatus 300}}success{{else if lt .ResponseStatus 400}}redirect{{else}}error{{end}}">{{.ResponseStatus}}</span></td>
+                <td>{{.DurationMs}}ms</td>
+                <td><a href="/history/{{.ID}}" class="btn btn-sm">Ver Detalhes</a></td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+    {{else}}
+    <p class="empty-state">Nenhuma requisição registrada ainda. Execute o fluxo OAuth2 para começar.</p>
+    {{end}}
+</div>
+{{end}}

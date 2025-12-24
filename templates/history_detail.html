@@ -1,0 +1,67 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="page-header">
+    <h2>Detalhes da Requisição #{{.Entry.ID}}</h2>
+    <p>{{.Entry.EndpointType}} - {{.Entry.CreatedAt.Format "02/01/2006 15:04:05"}}</p>
+    <a href="/history" class="btn btn-secondary">← Voltar para Histórico</a>
+</div>
+
+<div class="card">
+    <h3>Request</h3>
+
+    <div class="detail-row">
+        <strong>Método:</strong> <span class="method method-{{.Entry.RequestMethod}}">{{.Entry.RequestMethod}}</span>
+    </div>
+
+    <div class="detail-row">
+        <strong>URL:</strong> <code>{{.Entry.RequestURL}}</code>
+    </div>
+
+    <div class="detail-row">
+        <strong>Headers:</strong>
+        <pre class="code-block">{{range $key, $values := .RequestHeaders}}{{$key}}: {{range $values}}{{.}}{{end}}
+{{end}}</pre>
+    </div>
+
+    {{if .Entry.RequestBody}}
+    <div class="detail-row">
+        <strong>Body:</strong>
+        {{if .PrettyRequestBody}}
+        <pre class="code-block">{{.PrettyRequestBody}}</pre>
+        {{else}}
+        <pre class="code-block">{{.Entry.RequestBody}}</pre>
+        {{end}}
+    </div>
+    {{end}}
+</div>
+
+<div class="card mt-3">
+    <h3>Response</h3>
+
+    <div class="detail-row">
+        <strong>Status:</strong> <span class="status status-{{if lt .Entry.ResponseStatus 300}}success{{else if lt .Entry.ResponseStatus 400}}redirect{{else}}error{{end}}">{{.Entry.ResponseStatus}}</span>
+    </div>
+
+    <div class="detail-row">
+        <strong>Duração:</strong> {{.Entry.DurationMs}}ms
+    </div>
+
+    <div class="detail-row">
+        <strong>Headers:</strong>
+        <pre class="code-block">{{range $key, $values := .ResponseHeaders}}{{$key}}: {{range $values}}{{.}}{{end}}
+{{end}}</pre>
+    </div>
+
+    {{if .Entry.ResponseBody}}
+    <div class="detail-row">
+        <strong>Body:</strong>
+        {{if .PrettyResponseBody}}
+        <pre class="code-block">{{.PrettyResponseBody}}</pre>
+        {{else}}
+        <pre class="code-block">{{.Entry.ResponseBody}}</pre>
+        {{end}}
+    </div>
+    {{end}}
+</div>
+{{end}}

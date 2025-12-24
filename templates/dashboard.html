@@ -1,0 +1,108 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="page-header">
+    <h2>Dashboard</h2>
+    <p>Autenticação OAuth2 realizada com sucesso!</p>
+</div>
+
+{{if .UserInfo}}
+<div class="card">
+    <h3>Informações do Usuário</h3>
+    <div class="user-info">
+        <div class="info-row">
+            <span class="label">Nome:</span>
+            <span class="value">{{.UserInfo.Name}}</span>
+        </div>
+        <div class="info-row">
+            <span class="label">CPF:</span>
+            <span class="value">{{.UserInfo.CPF}}</span>
+        </div>
+        {{if .UserInfo.Email}}
+        <div class="info-row">
+            <span class="label">Email:</span>
+            <span class="value">{{.UserInfo.Email}} {{if .UserInfo.EmailVerified}}✓{{end}}</span>
+        </div>
+        {{end}}
+        {{if .UserInfo.PhoneNumber}}
+        <div class="info-row">
+            <span class="label">Telefone:</span>
+            <span class="value">{{.UserInfo.PhoneNumber}} {{if .UserInfo.PhoneNumberVerified}}✓{{end}}</span>
+        </div>
+        {{end}}
+        {{if .UserInfo.MembershipStatus}}
+        <div class="info-row">
+            <span class="label">Status de Filiação:</span>
+            <span class="value">{{.UserInfo.MembershipStatus}}</span>
+        </div>
+        {{end}}
+        {{if .UserInfo.EmploymentStatus}}
+        <div class="info-row">
+            <span class="label">Status de Emprego:</span>
+            <span class="value">{{.UserInfo.EmploymentStatus}}</span>
+        </div>
+        {{end}}
+        {{if .UserInfo.Permissions}}
+        <div class="info-row">
+            <span class="label">Permissões:</span>
+            <span class="value">{{range $i, $perm := .UserInfo.Permissions}}{{if $i}}, {{end}}{{$perm}}{{end}}</span>
+        </div>
+        {{end}}
+    </div>
+</div>
+{{end}}
+
+<div class="card mt-3">
+    <h3>Tokens</h3>
+
+    <div class="token-section">
+        <h4>Access Token</h4>
+        <textarea readonly class="token-field">{{.AccessToken}}</textarea>
+    </div>
+
+    {{if .RefreshToken}}
+    <div class="token-section mt-2">
+        <h4>Refresh Token</h4>
+        <textarea readonly class="token-field">{{.RefreshToken}}</textarea>
+    </div>
+    {{end}}
+
+    {{if .IDToken}}
+    <div class="token-section mt-2">
+        <h4>ID Token (JWT)</h4>
+        <textarea readonly class="token-field">{{.IDToken}}</textarea>
+    </div>
+    {{end}}
+</div>
+
+<div class="card mt-3">
+    <h3>Testar Endpoints</h3>
+    <p>Use os botões abaixo para testar funcionalidades adicionais do OAuth2.</p>
+
+    <div class="button-grid">
+        <button hx-post="/test/refresh" hx-target="#test-result" class="btn btn-secondary">
+            Refresh Token
+        </button>
+
+        <a href="/test/jwks" class="btn btn-secondary">
+            Validar JWT com JWKS
+        </a>
+
+        <a href="/test/discovery" class="btn btn-secondary">
+            OIDC Discovery
+        </a>
+
+        <button hx-post="/test/revoke" hx-target="#test-result" hx-confirm="Tem certeza? Isso vai revogar o token e encerrar a sessão." class="btn btn-danger">
+            Revogar Token
+        </button>
+    </div>
+
+    <div id="test-result" class="mt-3"></div>
+</div>
+
+<div class="card mt-3">
+    <h3>Histórico de Requisições</h3>
+    <p>Visualize todas as requisições HTTP realizadas durante o fluxo OAuth2.</p>
+    <a href="/history" class="btn btn-primary">Ver Histórico Completo</a>
+</div>
+{{end}}

@@ -1,0 +1,34 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="page-header">
+    <h2>JWKS - JSON Web Key Set</h2>
+    <p>Chaves públicas para validação de assinaturas JWT.</p>
+    <a href="/dashboard" class="btn btn-secondary">← Voltar para Dashboard</a>
+</div>
+
+<div class="card">
+    <h3>JWKS Endpoint</h3>
+    <pre class="code-block">{{.JWKS | printf "%+v"}}</pre>
+</div>
+
+{{if .Valid}}
+<div class="card mt-3 success-card">
+    <h3>✓ ID Token Validado com Sucesso!</h3>
+    <p>O token JWT foi validado usando as chaves públicas do JWKS.</p>
+
+    <h4>Claims do Token:</h4>
+    <pre class="code-block">{{range $key, $value := .Claims}}{{$key}}: {{$value}}
+{{end}}</pre>
+</div>
+{{else if .ValidationError}}
+<div class="card mt-3 error-card">
+    <h3>✗ Falha na Validação do Token</h3>
+    <p>{{.ValidationError}}</p>
+</div>
+{{else}}
+<div class="card mt-3">
+    <p>Nenhum ID Token disponível para validação. Execute o fluxo OAuth2 primeiro.</p>
+</div>
+{{end}}
+{{end}}
