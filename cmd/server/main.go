@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"html/template"
 	"log"
 	"net/http"
@@ -12,9 +13,17 @@ import (
 	"github.com/gorilla/sessions"
 
 	"github.com/pericles-luz/oauth2-test/internal/handlers"
+	"github.com/pericles-luz/oauth2-test/internal/models"
 	"github.com/pericles-luz/oauth2-test/internal/services"
 	"github.com/pericles-luz/oauth2-test/internal/storage"
 )
+
+func init() {
+	// Register types for gob encoding (used by gorilla/sessions)
+	gob.Register(&models.UserInfo{})
+	gob.Register(map[string]interface{}{})
+	gob.Register([]interface{}{})
+}
 
 func main() {
 	// Load configuration from environment
