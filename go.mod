@@ -1,10 +1,10 @@
 module github.com/pericles-luz/oauth2-test
 
-go 1.25.4
+go 1.25.5
 
 require (
 	github.com/go-chi/chi/v5 v5.2.3
-	github.com/golang-jwt/jwt/v5 v5.2.1
+	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/gorilla/sessions v1.4.0
 	golang.org/x/oauth2 v0.34.0
 	modernc.org/sqlite v1.41.0
