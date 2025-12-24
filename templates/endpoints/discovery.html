@@ -1,6 +1,6 @@
-{{template "base" .}}
+{{define "discovery"}}
+{{template "header" .}}
 
-{{define "content"}}
 <div class="page-header">
     <h2>OIDC Discovery</h2>
     <p>Documento de descoberta OpenID Connect (.well-known/openid-configuration)</p>
@@ -23,4 +23,6 @@
         {{if .Discovery.revocation_endpoint}}<li><strong>Revocation:</strong> {{.Discovery.revocation_endpoint}}</li>{{end}}
     </ul>
 </div>
+
+{{template "footer" .}}
 {{end}}

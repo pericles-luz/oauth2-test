@@ -35,7 +35,7 @@ func (h *Handlers) Home(w http.ResponseWriter, r *http.Request) {
 		{"union_unit", "union_unit - Detalhes da seccional", false},
 	}
 
-	if err := h.templates.ExecuteTemplate(w, "home.html", data); err != nil {
+	if err := h.templates.ExecuteTemplate(w, "home", data); err != nil {
 		log.Printf("Error rendering home template: %v", err)
 		http.Error(w, "Error rendering page", http.StatusInternalServerError)
 	}

@@ -155,7 +155,7 @@ func (h *Handlers) TestJWKS(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if err := h.templates.ExecuteTemplate(w, "jwks.html", data); err != nil {
+	if err := h.templates.ExecuteTemplate(w, "jwks", data); err != nil {
 		log.Printf("Error rendering JWKS template: %v", err)
 		http.Error(w, "Error rendering page", http.StatusInternalServerError)
 	}
@@ -197,7 +197,7 @@ func (h *Handlers) TestDiscovery(w http.ResponseWriter, r *http.Request) {
 		"DiscoveryJSON": string(discoveryJSON),
 	}
 
-	if err := h.templates.ExecuteTemplate(w, "discovery.html", data); err != nil {
+	if err := h.templates.ExecuteTemplate(w, "discovery", data); err != nil {
 		log.Printf("Error rendering discovery template: %v", err)
 		http.Error(w, "Error rendering page", http.StatusInternalServerError)
 	}

@@ -1,6 +1,6 @@
-{{template "base" .}}
+{{define "jwks"}}
+{{template "header" .}}
 
-{{define "content"}}
 <div class="page-header">
     <h2>JWKS - JSON Web Key Set</h2>
     <p>Chaves públicas para validação de assinaturas JWT.</p>
@@ -31,4 +31,6 @@
     <p>Nenhum ID Token disponível para validação. Execute o fluxo OAuth2 primeiro.</p>
 </div>
 {{end}}
+
+{{template "footer" .}}
 {{end}}

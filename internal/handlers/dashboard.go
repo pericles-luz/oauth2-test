@@ -37,7 +37,7 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 		"UserInfo":     userInfo,
 	}
 
-	if err := h.templates.ExecuteTemplate(w, "dashboard.html", data); err != nil {
+	if err := h.templates.ExecuteTemplate(w, "dashboard", data); err != nil {
 		log.Printf("Error rendering dashboard template: %v", err)
 		http.Error(w, "Error rendering page", http.StatusInternalServerError)
 	}

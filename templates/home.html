@@ -1,6 +1,6 @@
-{{template "base" .}}
+{{define "home"}}
+{{template "header" .}}
 
-{{define "content"}}
 <div class="page-header">
     <h2>Configuração OAuth2</h2>
     <p>Configure as credenciais do cliente OAuth2 para iniciar os testes.</p>
@@ -88,4 +88,6 @@ document.querySelector('form').addEventListener('submit', function(e) {
     this.appendChild(input);
 });
 </script>
+
+{{template "footer" .}}
 {{end}}

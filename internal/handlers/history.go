@@ -42,7 +42,7 @@ func (h *Handlers) HistoryList(w http.ResponseWriter, r *http.Request) {
 		"Offset":  offset,
 	}
 
-	if err := h.templates.ExecuteTemplate(w, "history.html", data); err != nil {
+	if err := h.templates.ExecuteTemplate(w, "history", data); err != nil {
 		log.Printf("Error rendering history template: %v", err)
 		http.Error(w, "Error rendering page", http.StatusInternalServerError)
 	}
@@ -97,7 +97,7 @@ func (h *Handlers) HistoryDetail(w http.ResponseWriter, r *http.Request) {
 		data["PrettyResponseBody"] = string(prettyRespJSON)
 	}
 
-	if err := h.templates.ExecuteTemplate(w, "history_detail.html", data); err != nil {
+	if err := h.templates.ExecuteTemplate(w, "history_detail", data); err != nil {
 		log.Printf("Error rendering history detail template: %v", err)
 		http.Error(w, "Error rendering page", http.StatusInternalServerError)
 	}

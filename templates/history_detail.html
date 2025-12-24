@@ -1,6 +1,6 @@
-{{template "base" .}}
+{{define "history_detail"}}
+{{template "header" .}}
 
-{{define "content"}}
 <div class="page-header">
     <h2>Detalhes da Requisição #{{.Entry.ID}}</h2>
     <p>{{.Entry.EndpointType}} - {{.Entry.CreatedAt.Format "02/01/2006 15:04:05"}}</p>
@@ -64,4 +64,6 @@
     </div>
     {{end}}
 </div>
+
+{{template "footer" .}}
 {{end}}

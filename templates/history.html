@@ -1,6 +1,6 @@
-{{template "base" .}}
+{{define "history"}}
+{{template "header" .}}
 
-{{define "content"}}
 <div class="page-header">
     <h2>Histórico de Requisições HTTP</h2>
     <p>Todas as requisições OAuth2 capturadas para debug.</p>
@@ -38,4 +38,6 @@
     <p class="empty-state">Nenhuma requisição registrada ainda. Execute o fluxo OAuth2 para começar.</p>
     {{end}}
 </div>
+
+{{template "footer" .}}
 {{end}}

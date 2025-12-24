@@ -132,7 +132,7 @@ func loadTemplates() *template.Template {
 
 	// Load all template files
 	templatePattern := filepath.Join("templates", "*.html")
-	tmpl = template.Must(template.ParseGlob(templatePattern))
+	tmpl = template.Must(tmpl.ParseGlob(templatePattern))
 
 	// Load endpoint templates
 	endpointPattern := filepath.Join("templates", "endpoints", "*.html")
