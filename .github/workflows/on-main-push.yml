@@ -47,7 +47,7 @@ jobs:
 
     - name: gerando configuração de ambiente
       run: |
-        cat <<'EOF' > ./config/.env
+        cat <<'EOF' > .env
         ${{ secrets.CONFIG_ENV }}
         EOF
     - name: Run tests
