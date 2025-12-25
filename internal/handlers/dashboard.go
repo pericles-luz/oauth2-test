@@ -42,12 +42,16 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 		idToken = idTokenVal
 	}
 
+	// Get scopes from session
+	scopesStr, _ := session.Values[KeyScopes].(string)
+
 	// Prepare template data
 	data := map[string]interface{}{
 		"AccessToken":  token.AccessToken,
 		"RefreshToken": token.RefreshToken,
 		"IDToken":      idToken,
 		"UserInfo":     userInfo,
+		"Scopes":       scopesStr,
 	}
 
 	if err := h.templates.ExecuteTemplate(w, "dashboard", data); err != nil {

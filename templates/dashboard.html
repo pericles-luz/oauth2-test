@@ -6,34 +6,85 @@
     <p>Autenticação OAuth2 realizada com sucesso!</p>
 </div>
 
-{{if .UserInfo}}
+{{if .Scopes}}
 <div class="card">
-    <h3>Informações do Usuário</h3>
+    <h3>Escopos Solicitados</h3>
     <div class="user-info">
         <div class="info-row">
-            <span class="label">Nome:</span>
-            <span class="value">{{.UserInfo.Name}}</span>
+            <span class="label">Scopes:</span>
+            <span class="value"><strong>{{.Scopes}}</strong></span>
         </div>
+    </div>
+</div>
+{{end}}
+
+{{if .UserInfo}}
+<div class="card mt-3">
+    <h3>Dados Obtidos do Escopo</h3>
+
+    <h4 style="margin-top: 1.5rem; color: #2563eb; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem;">Identificação</h4>
+    <div class="user-info">
+        {{if .UserInfo.Sub}}
+        <div class="info-row">
+            <span class="label">Subject (Sub):</span>
+            <span class="value">{{.UserInfo.Sub}}</span>
+        </div>
+        {{end}}
+        {{if .UserInfo.Name}}
+        <div class="info-row">
+            <span class="label">Nome:</span>
+            <span class="value"><strong>{{.UserInfo.Name}}</strong></span>
+        </div>
+        {{end}}
+        {{if .UserInfo.CPF}}
         <div class="info-row">
             <span class="label">CPF:</span>
-            <span class="value">{{.UserInfo.CPF}}</span>
+            <span class="value"><strong>{{.UserInfo.CPF}}</strong></span>
         </div>
+        {{end}}
+    </div>
+
+    {{if or .UserInfo.Email .UserInfo.PhoneNumber}}
+    <h4 style="margin-top: 1.5rem; color: #2563eb; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem;">Contato</h4>
+    <div class="user-info">
         {{if .UserInfo.Email}}
         <div class="info-row">
             <span class="label">Email:</span>
-            <span class="value">{{.UserInfo.Email}} {{if .UserInfo.EmailVerified}}✓{{end}}</span>
+            <span class="value">{{.UserInfo.Email}} {{if .UserInfo.EmailVerified}}<span style="color: #059669;">✓ verificado</span>{{else}}<span style="color: #dc2626;">✗ não verificado</span>{{end}}</span>
         </div>
         {{end}}
         {{if .UserInfo.PhoneNumber}}
         <div class="info-row">
             <span class="label">Telefone:</span>
-            <span class="value">{{.UserInfo.PhoneNumber}} {{if .UserInfo.PhoneNumberVerified}}✓{{end}}</span>
+            <span class="value">{{.UserInfo.PhoneNumber}} {{if .UserInfo.PhoneNumberVerified}}<span style="color: #059669;">✓ verificado</span>{{else}}<span style="color: #dc2626;">✗ não verificado</span>{{end}}</span>
         </div>
         {{end}}
+    </div>
+    {{end}}
+
+    {{if .UserInfo.Address}}
+    <h4 style="margin-top: 1.5rem; color: #2563eb; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem;">Endereço</h4>
+    <div class="user-info">
+        <div class="info-row">
+            <span class="label">Endereço:</span>
+            <span class="value">{{.UserInfo.Address}}</span>
+        </div>
+    </div>
+    {{end}}
+
+    {{if or .UserInfo.MembershipStatus .UserInfo.EmploymentStatus .UserInfo.MembershipType .UserInfo.UnionUnit}}
+    <h4 style="margin-top: 1.5rem; color: #2563eb; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem;">Informações Sindicais</h4>
+    <div class="user-info">
         {{if .UserInfo.MembershipStatus}}
         <div class="info-row">
             <span class="label">Status de Filiação:</span>
-            <span class="value">{{.UserInfo.MembershipStatus}}</span>
+            <span class="value"><strong>{{.UserInfo.MembershipStatus}}</strong></span>
+        </div>
+        {{end}}
+        {{if .UserInfo.MembershipType}}
+        <div class="info-row">
+            <span class="label">Tipo de Filiação:</span>
+            <span class="value">{{.UserInfo.MembershipType}}</span>
         </div>
         {{end}}
         {{if .UserInfo.EmploymentStatus}}
@@ -42,13 +93,30 @@
             <span class="value">{{.UserInfo.EmploymentStatus}}</span>
         </div>
         {{end}}
-        {{if .UserInfo.Permissions}}
+        {{if .UserInfo.UnionUnit}}
         <div class="info-row">
-            <span class="label">Permissões:</span>
-            <span class="value">{{range $i, $perm := .UserInfo.Permissions}}{{if $i}}, {{end}}{{$perm}}{{end}}</span>
+            <span class="label">Unidade Sindical:</span>
+            <span class="value">{{.UserInfo.UnionUnit}}</span>
         </div>
         {{end}}
     </div>
+    {{end}}
+
+    {{if .UserInfo.Permissions}}
+    <h4 style="margin-top: 1.5rem; color: #2563eb; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem;">Permissões</h4>
+    <div class="user-info">
+        <div class="info-row">
+            <span class="label">Permissões Concedidas:</span>
+            <span class="value">
+                <ul style="margin: 0; padding-left: 1.5rem;">
+                {{range .UserInfo.Permissions}}
+                    <li><strong>{{.}}</strong></li>
+                {{end}}
+                </ul>
+            </span>
+        </div>
+    </div>
+    {{end}}
 </div>
 {{end}}
 
