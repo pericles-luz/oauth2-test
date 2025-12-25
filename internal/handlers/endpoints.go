@@ -14,8 +14,22 @@ import (
 func (h *Handlers) TestRefresh(w http.ResponseWriter, r *http.Request) {
 	session, _ := h.sessionStore.Get(r, SessionName)
 
-	refreshToken, _ := session.Values[KeyRefreshToken].(string)
-	if refreshToken == "" {
+	// Get session ID
+	sessionID, _ := session.Values[KeySessionID].(string)
+	if sessionID == "" {
+		http.Error(w, "Not authenticated", http.StatusUnauthorized)
+		return
+	}
+
+	// Get token from token store
+	tokenStore := services.GetTokenStore()
+	token, userInfo, ok := tokenStore.Get(sessionID)
+	if !ok || token == nil {
+		http.Error(w, "Session expired", http.StatusUnauthorized)
+		return
+	}
+
+	if token.RefreshToken == "" {
 		http.Error(w, "No refresh token available", http.StatusBadRequest)
 		return
 	}
@@ -38,7 +52,7 @@ func (h *Handlers) TestRefresh(w http.ResponseWriter, r *http.Request) {
 	oauthService := services.NewOAuthService(oauthConfig, h.historyService)
 
 	// Refresh token
-	newToken, err := oauthService.RefreshToken(refreshToken)
+	newToken, err := oauthService.RefreshToken(token.RefreshToken)
 	if err != nil {
 		log.Printf("Token refresh failed: %v", err)
 		w.Header().Set("Content-Type", "text/html")
@@ -46,12 +60,8 @@ func (h *Handlers) TestRefresh(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Update session with new tokens
-	session.Values[KeyAccessToken] = newToken.AccessToken
-	if newToken.RefreshToken != "" {
-		session.Values[KeyRefreshToken] = newToken.RefreshToken
-	}
-	session.Save(r, w)
+	// Update token store with new tokens
+	tokenStore.Store(sessionID, newToken, userInfo)
 
 	// Return success with new token info
 	w.Header().Set("Content-Type", "text/html")
@@ -75,8 +85,22 @@ func (h *Handlers) TestRefresh(w http.ResponseWriter, r *http.Request) {
 func (h *Handlers) TestRevoke(w http.ResponseWriter, r *http.Request) {
 	session, _ := h.sessionStore.Get(r, SessionName)
 
-	accessToken, _ := session.Values[KeyAccessToken].(string)
-	if accessToken == "" {
+	// Get session ID
+	sessionID, _ := session.Values[KeySessionID].(string)
+	if sessionID == "" {
+		http.Error(w, "Not authenticated", http.StatusUnauthorized)
+		return
+	}
+
+	// Get token from token store
+	tokenStore := services.GetTokenStore()
+	token, _, ok := tokenStore.Get(sessionID)
+	if !ok || token == nil {
+		http.Error(w, "Session expired", http.StatusUnauthorized)
+		return
+	}
+
+	if token.AccessToken == "" {
 		http.Error(w, "No access token available", http.StatusBadRequest)
 		return
 	}
@@ -99,18 +123,16 @@ func (h *Handlers) TestRevoke(w http.ResponseWriter, r *http.Request) {
 	oauthService := services.NewOAuthService(oauthConfig, h.historyService)
 
 	// Revoke token
-	if err := oauthService.RevokeToken(accessToken); err != nil {
+	if err := oauthService.RevokeToken(token.AccessToken); err != nil {
 		log.Printf("Token revocation failed: %v", err)
 		w.Header().Set("Content-Type", "text/html")
 		w.Write([]byte(`<div class="error">Token revocation falhou: ` + err.Error() + `</div>`))
 		return
 	}
 
-	// Clear session
-	delete(session.Values, KeyAccessToken)
-	delete(session.Values, KeyRefreshToken)
-	delete(session.Values, KeyIDToken)
-	delete(session.Values, "user_info")
+	// Clear token store and session
+	tokenStore.Delete(sessionID)
+	delete(session.Values, KeySessionID)
 	session.Save(r, w)
 
 	// Return success
@@ -127,7 +149,20 @@ func (h *Handlers) TestRevoke(w http.ResponseWriter, r *http.Request) {
 func (h *Handlers) TestJWKS(w http.ResponseWriter, r *http.Request) {
 	session, _ := h.sessionStore.Get(r, SessionName)
 
-	idToken, _ := session.Values[KeyIDToken].(string)
+	// Get session ID
+	sessionID, _ := session.Values[KeySessionID].(string)
+
+	var idToken string
+	if sessionID != "" {
+		// Get token from token store
+		tokenStore := services.GetTokenStore()
+		token, _, ok := tokenStore.Get(sessionID)
+		if ok && token != nil {
+			if idTokenVal, ok := token.Extra("id_token").(string); ok {
+				idToken = idTokenVal
+			}
+		}
+	}
 
 	jwksService := services.NewJWKSService(h.baseURL, h.historyService)
 

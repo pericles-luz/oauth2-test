@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/pericles-luz/oauth2-test/internal/models"
+	"github.com/pericles-luz/oauth2-test/internal/services"
 )
 
 // Dashboard displays user information and tokens after successful authentication
@@ -13,27 +14,39 @@ func (h *Handlers) Dashboard(w http.ResponseWriter, r *http.Request) {
 	session, _ := h.sessionStore.Get(r, SessionName)
 
 	// Check if user is authenticated
-	accessToken, _ := session.Values[KeyAccessToken].(string)
-	if accessToken == "" {
+	sessionID, _ := session.Values[KeySessionID].(string)
+	if sessionID == "" {
 		http.Error(w, "Not authenticated. Please login first.", http.StatusUnauthorized)
 		return
 	}
 
-	// Get user info from session
+	// Get tokens and user info from token store
+	tokenStore := services.GetTokenStore()
+	token, userInfoData, ok := tokenStore.Get(sessionID)
+	if !ok || token == nil {
+		http.Error(w, "Session expired. Please login again.", http.StatusUnauthorized)
+		return
+	}
+
+	// Convert user info from interface{} to UserInfo
 	var userInfo *models.UserInfo
-	if userInfoData, ok := session.Values["user_info"]; ok {
-		// User info is stored as interface{}, need to convert
-		// This is a workaround for session serialization
+	if userInfoData != nil {
 		jsonData, _ := json.Marshal(userInfoData)
 		userInfo = &models.UserInfo{}
 		json.Unmarshal(jsonData, userInfo)
 	}
 
+	// Extract ID token if present
+	var idToken string
+	if idTokenVal, ok := token.Extra("id_token").(string); ok {
+		idToken = idTokenVal
+	}
+
 	// Prepare template data
 	data := map[string]interface{}{
-		"AccessToken":  accessToken,
-		"RefreshToken": session.Values[KeyRefreshToken],
-		"IDToken":      session.Values[KeyIDToken],
+		"AccessToken":  token.AccessToken,
+		"RefreshToken": token.RefreshToken,
+		"IDToken":      idToken,
 		"UserInfo":     userInfo,
 	}
 

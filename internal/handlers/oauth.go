@@ -142,13 +142,6 @@ func (h *Handlers) OAuthCallback(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("Token exchange successful! Access token: %s...", token.AccessToken[:20])
 
-	// Store tokens in session
-	session.Values[KeyAccessToken] = token.AccessToken
-	session.Values[KeyRefreshToken] = token.RefreshToken
-	if idToken, ok := token.Extra("id_token").(string); ok {
-		session.Values[KeyIDToken] = idToken
-	}
-
 	// Get user info
 	log.Printf("Fetching user info...")
 	userInfo, err := oauthService.GetUserInfo(token.AccessToken)
@@ -157,11 +150,24 @@ func (h *Handlers) OAuthCallback(w http.ResponseWriter, r *http.Request) {
 		// Don't fail, just log the error
 	}
 
-	// Store user info in session
 	if userInfo != nil {
-		session.Values["user_info"] = userInfo
 		log.Printf("User info retrieved: %s (%s)", userInfo.Name, userInfo.CPF)
 	}
+
+	// Generate a unique session ID
+	sessionID, err := services.GenerateRandomState()
+	if err != nil {
+		log.Printf("Failed to generate session ID: %v", err)
+		http.Error(w, "Failed to generate session ID", http.StatusInternalServerError)
+		return
+	}
+
+	// Store tokens and user info in token store
+	tokenStore := services.GetTokenStore()
+	tokenStore.Store(sessionID, token, userInfo)
+
+	// Store only the session ID in the cookie session
+	session.Values[KeySessionID] = sessionID
 
 	if err := session.Save(r, w); err != nil {
 		log.Printf("Failed to save session: %v", err)

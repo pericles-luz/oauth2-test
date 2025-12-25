@@ -40,7 +40,5 @@ const (
 	KeyScopes       = "scopes"
 	KeyCodeVerifier = "code_verifier"
 	KeyState        = "state"
-	KeyAccessToken  = "access_token"
-	KeyRefreshToken = "refresh_token"
-	KeyIDToken      = "id_token"
+	KeySessionID    = "session_id"
 )
