@@ -8,12 +8,127 @@
 
 {{if .Scopes}}
 <div class="card">
-    <h3>Escopos Solicitados</h3>
-    <div class="user-info">
-        <div class="info-row">
-            <span class="label">Scopes:</span>
-            <span class="value"><strong>{{.Scopes}}</strong></span>
+    <h3>Escopos Solicitados e Dados Obtidos</h3>
+    <p style="color: #6b7280; margin-bottom: 1rem;">Relação entre os escopos OAuth2 solicitados e as informações disponibilizadas:</p>
+
+    <div style="display: grid; gap: 1rem;">
+        {{if contains .Scopes "openid"}}
+        <div style="border-left: 4px solid #2563eb; padding-left: 1rem; background-color: #f9fafb; padding: 1rem; border-radius: 0.25rem;">
+            <div style="font-weight: bold; color: #2563eb; margin-bottom: 0.5rem;">📋 openid</div>
+            <div style="font-size: 0.875rem; color: #374151;">
+                Identificador único do usuário
+                {{if .UserInfo.Sub}}
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
+                    ✓ <strong>sub:</strong> {{.UserInfo.Sub}}
+                </div>
+                {{end}}
+            </div>
         </div>
+        {{end}}
+
+        {{if contains .Scopes "profile"}}
+        <div style="border-left: 4px solid #059669; padding-left: 1rem; background-color: #f0fdf4; padding: 1rem; border-radius: 0.25rem;">
+            <div style="font-weight: bold; color: #059669; margin-bottom: 0.5rem;">👤 profile</div>
+            <div style="font-size: 0.875rem; color: #374151;">
+                Informações básicas do perfil (nome, CPF, etc.)
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
+                    {{if .UserInfo.Name}}✓ <strong>name:</strong> {{.UserInfo.Name}}<br>{{end}}
+                    {{if .UserInfo.CPF}}✓ <strong>cpf:</strong> {{.UserInfo.CPF}}{{end}}
+                </div>
+            </div>
+        </div>
+        {{end}}
+
+        {{if contains .Scopes "email"}}
+        <div style="border-left: 4px solid #dc2626; padding-left: 1rem; background-color: #fef2f2; padding: 1rem; border-radius: 0.25rem;">
+            <div style="font-weight: bold; color: #dc2626; margin-bottom: 0.5rem;">📧 email</div>
+            <div style="font-size: 0.875rem; color: #374151;">
+                Endereço de e-mail e status de verificação
+                {{if .UserInfo.Email}}
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
+                    ✓ <strong>email:</strong> {{.UserInfo.Email}}<br>
+                    ✓ <strong>email_verified:</strong> {{if .UserInfo.EmailVerified}}true{{else}}false{{end}}
+                </div>
+                {{else}}
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem; color: #9ca3af;">
+                    Nenhum e-mail disponível
+                </div>
+                {{end}}
+            </div>
+        </div>
+        {{end}}
+
+        {{if contains .Scopes "phone"}}
+        <div style="border-left: 4px solid #7c3aed; padding-left: 1rem; background-color: #faf5ff; padding: 1rem; border-radius: 0.25rem;">
+            <div style="font-weight: bold; color: #7c3aed; margin-bottom: 0.5rem;">📱 phone</div>
+            <div style="font-size: 0.875rem; color: #374151;">
+                Número de telefone e status de verificação
+                {{if .UserInfo.PhoneNumber}}
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
+                    ✓ <strong>phone_number:</strong> {{.UserInfo.PhoneNumber}}<br>
+                    ✓ <strong>phone_number_verified:</strong> {{if .UserInfo.PhoneNumberVerified}}true{{else}}false{{end}}
+                </div>
+                {{else}}
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem; color: #9ca3af;">
+                    Nenhum telefone disponível
+                </div>
+                {{end}}
+            </div>
+        </div>
+        {{end}}
+
+        {{if contains .Scopes "address"}}
+        <div style="border-left: 4px solid #ea580c; padding-left: 1rem; background-color: #fff7ed; padding: 1rem; border-radius: 0.25rem;">
+            <div style="font-weight: bold; color: #ea580c; margin-bottom: 0.5rem;">🏠 address</div>
+            <div style="font-size: 0.875rem; color: #374151;">
+                Informações de endereço completo
+                {{if .UserInfo.Address}}
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
+                    ✓ <strong>address:</strong> {{.UserInfo.Address}}
+                </div>
+                {{else}}
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem; color: #9ca3af;">
+                    Nenhum endereço disponível
+                </div>
+                {{end}}
+            </div>
+        </div>
+        {{end}}
+
+        {{if or (contains .Scopes "union_info") (contains .Scopes "membership")}}
+        <div style="border-left: 4px solid #0891b2; padding-left: 1rem; background-color: #ecfeff; padding: 1rem; border-radius: 0.25rem;">
+            <div style="font-weight: bold; color: #0891b2; margin-bottom: 0.5rem;">🏢 union_info / membership</div>
+            <div style="font-size: 0.875rem; color: #374151;">
+                Informações sindicais e de filiação
+                {{if or .UserInfo.MembershipStatus .UserInfo.EmploymentStatus .UserInfo.MembershipType .UserInfo.UnionUnit}}
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
+                    {{if .UserInfo.MembershipStatus}}✓ <strong>membership_status:</strong> {{.UserInfo.MembershipStatus}}<br>{{end}}
+                    {{if .UserInfo.MembershipType}}✓ <strong>membership_type:</strong> {{.UserInfo.MembershipType}}<br>{{end}}
+                    {{if .UserInfo.EmploymentStatus}}✓ <strong>employment_status:</strong> {{.UserInfo.EmploymentStatus}}<br>{{end}}
+                    {{if .UserInfo.UnionUnit}}✓ <strong>union_unit:</strong> {{.UserInfo.UnionUnit}}{{end}}
+                </div>
+                {{else}}
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem; color: #9ca3af;">
+                    Nenhuma informação sindical disponível
+                </div>
+                {{end}}
+            </div>
+        </div>
+        {{end}}
+
+        {{if .UserInfo.Permissions}}
+        <div style="border-left: 4px solid #ca8a04; padding-left: 1rem; background-color: #fefce8; padding: 1rem; border-radius: 0.25rem;">
+            <div style="font-weight: bold; color: #ca8a04; margin-bottom: 0.5rem;">🔐 permissions</div>
+            <div style="font-size: 0.875rem; color: #374151;">
+                Permissões específicas concedidas
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
+                    {{range $i, $perm := .UserInfo.Permissions}}
+                    {{if $i}}<br>{{end}}✓ <strong>{{$perm}}</strong>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+        {{end}}
     </div>
 </div>
 {{end}}

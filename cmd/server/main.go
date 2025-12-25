@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -135,6 +136,9 @@ func loadTemplates() *template.Template {
 				end = len(s)
 			}
 			return s[start:end]
+		},
+		"contains": func(s, substr string) bool {
+			return strings.Contains(s, substr)
 		},
 	}
 	tmpl.Funcs(funcMap)
