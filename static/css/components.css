@@ -527,6 +527,17 @@ body.dark-mode .scope-card {
     border-left-width: 4px;
 }
 
+/* Dark mode for card highlight text */
+body.dark-mode .card-highlight p {
+    color: #aaa !important;
+}
+
+/* Dark mode for inline text colors */
+body.dark-mode [style*="color: #6b7280"],
+body.dark-mode [style*="color: #374151"] {
+    color: #aaa !important;
+}
+
 /* Dark mode for form validation errors */
 body.dark-mode .form-group.error input,
 body.dark-mode .form-group.error textarea {
