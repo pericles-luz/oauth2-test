@@ -23,7 +23,7 @@
             <div style="font-size: 0.875rem; color: #374151;">
                 Identificador único do usuário
                 {{if .UserInfo.Sub}}
-                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.25rem;">
                     ✓ <strong>sub:</strong> <span style="font-family: monospace;">{{.UserInfo.Sub}}</span>
                 </div>
                 {{end}}
@@ -41,7 +41,7 @@
             </div>
             <div style="font-size: 0.875rem; color: #374151;">
                 Informações básicas do perfil (nome, CPF, etc.)
-                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.25rem;">
                     {{if .UserInfo.Name}}✓ <strong>name:</strong> {{.UserInfo.Name}}<br>{{end}}
                     {{if .UserInfo.CPF}}✓ <strong>cpf:</strong> {{.UserInfo.CPF}}{{end}}
                 </div>
@@ -60,12 +60,12 @@
             <div style="font-size: 0.875rem; color: #374151;">
                 Endereço de e-mail e status de verificação
                 {{if .UserInfo.Email}}
-                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.25rem;">
                     ✓ <strong>email:</strong> {{.UserInfo.Email}}<br>
                     ✓ <strong>email_verified:</strong> {{if .UserInfo.EmailVerified}}true{{else}}false{{end}}
                 </div>
                 {{else}}
-                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem; color: #9ca3af;">
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.25rem; color: #9ca3af;">
                     Nenhum e-mail disponível
                 </div>
                 {{end}}
@@ -84,12 +84,12 @@
             <div style="font-size: 0.875rem; color: #374151;">
                 Número de telefone e status de verificação
                 {{if .UserInfo.PhoneNumber}}
-                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.25rem;">
                     ✓ <strong>phone_number:</strong> {{.UserInfo.PhoneNumber}}<br>
                     ✓ <strong>phone_number_verified:</strong> {{if .UserInfo.PhoneNumberVerified}}true{{else}}false{{end}}
                 </div>
                 {{else}}
-                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem; color: #9ca3af;">
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.25rem; color: #9ca3af;">
                     Nenhum telefone disponível
                 </div>
                 {{end}}
@@ -108,11 +108,11 @@
             <div style="font-size: 0.875rem; color: #374151;">
                 Informações de endereço completo
                 {{if .UserInfo.Address}}
-                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.25rem;">
                     ✓ <strong>address:</strong> {{.UserInfo.Address}}
                 </div>
                 {{else}}
-                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem; color: #9ca3af;">
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.25rem; color: #9ca3af;">
                     Nenhum endereço disponível
                 </div>
                 {{end}}
@@ -131,14 +131,14 @@
             <div style="font-size: 0.875rem; color: #374151;">
                 Informações sindicais e de filiação
                 {{if or .UserInfo.MembershipStatus .UserInfo.EmploymentStatus .UserInfo.MembershipType .UserInfo.UnionUnit}}
-                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.25rem;">
                     {{if .UserInfo.MembershipStatus}}✓ <strong>membership_status:</strong> {{.UserInfo.MembershipStatus}}<br>{{end}}
                     {{if .UserInfo.MembershipType}}✓ <strong>membership_type:</strong> {{.UserInfo.MembershipType}}<br>{{end}}
                     {{if .UserInfo.EmploymentStatus}}✓ <strong>employment_status:</strong> {{.UserInfo.EmploymentStatus}}<br>{{end}}
                     {{if .UserInfo.UnionUnit}}✓ <strong>union_unit:</strong> {{.UserInfo.UnionUnit}}{{end}}
                 </div>
                 {{else}}
-                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem; color: #9ca3af;">
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.25rem; color: #9ca3af;">
                     Nenhuma informação sindical disponível
                 </div>
                 {{end}}
@@ -156,7 +156,7 @@
             </div>
             <div style="font-size: 0.875rem; color: #374151;">
                 Permissões específicas concedidas
-                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
+                <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0.25rem;">
                     {{range $i, $perm := .UserInfo.Permissions}}
                     {{if $i}}<br>{{end}}✓ <strong>{{$perm}}</strong>
                     {{end}}
