@@ -8,34 +8,76 @@
 
 <div class="card">
     {{if .Entries}}
-    <table class="history-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Data/Hora</th>
-                <th>Método</th>
-                <th>Endpoint</th>
-                <th>Status</th>
-                <th>Duração</th>
-                <th>Ação</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{range .Entries}}
-            <tr>
-                <td>{{.ID}}</td>
-                <td>{{.CreatedAt.Format "02/01/2006 15:04:05"}}</td>
-                <td><span class="method method-{{.RequestMethod}}">{{.RequestMethod}}</span></td>
-                <td><span class="endpoint-type">{{.EndpointType}}</span></td>
-                <td><span class="status status-{{if lt .ResponseStatus 300}}success{{else if lt .ResponseStatus 400}}redirect{{else}}error{{end}}">{{.ResponseStatus}}</span></td>
-                <td>{{.DurationMs}}ms</td>
-                <td><a href="/history/{{.ID}}" class="btn btn-sm">Ver Detalhes</a></td>
-            </tr>
-            {{end}}
-        </tbody>
-    </table>
+    <!-- Search box -->
+    <div style="margin-bottom: 1.5rem;">
+        <input type="search"
+               class="table-search"
+               placeholder="🔍 Buscar por ID, método, endpoint, status..."
+               aria-label="Buscar requisições">
+    </div>
+
+    <!-- Desktop table -->
+    <div class="history-table-desktop">
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Data/Hora</th>
+                    <th>Método</th>
+                    <th>Endpoint</th>
+                    <th>Status</th>
+                    <th>Duração</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .Entries}}
+                <tr>
+                    <td>{{.ID}}</td>
+                    <td>{{.CreatedAt.Format "02/01/2006 15:04:05"}}</td>
+                    <td><span class="method method-{{.RequestMethod}}">{{.RequestMethod}}</span></td>
+                    <td><span class="endpoint-type">{{.EndpointType}}</span></td>
+                    <td><span class="status status-{{if lt .ResponseStatus 300}}success{{else if lt .ResponseStatus 400}}redirect{{else}}error{{end}}">{{.ResponseStatus}}</span></td>
+                    <td>{{.DurationMs}}ms</td>
+                    <td><a href="/history/{{.ID}}" class="btn btn-sm">Ver Detalhes</a></td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Mobile cards -->
+    <div class="history-table-mobile">
+        {{range .Entries}}
+        <div class="card" style="margin-bottom: 1rem; padding: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+                <span style="font-weight: 600; color: #6c757d; font-size: 0.875rem;">Requisição #{{.ID}}</span>
+                <span class="method method-{{.RequestMethod}}">{{.RequestMethod}}</span>
+            </div>
+
+            <div style="font-size: 0.875rem; color: #6c757d; margin-bottom: 0.5rem;">
+                📅 {{.CreatedAt.Format "02/01/2006 15:04:05"}}
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+                <span class="endpoint-type">{{.EndpointType}}</span>
+                <span class="status status-{{if lt .ResponseStatus 300}}success{{else if lt .ResponseStatus 400}}redirect{{else}}error{{end}}">{{.ResponseStatus}}</span>
+                <span style="font-size: 0.875rem; color: #6c757d;">⏱️ {{.DurationMs}}ms</span>
+            </div>
+
+            <a href="/history/{{.ID}}" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+                Ver Detalhes
+            </a>
+        </div>
+        {{end}}
+    </div>
+
     {{else}}
-    <p class="empty-state">Nenhuma requisição registrada ainda. Execute o fluxo OAuth2 para começar.</p>
+    <div class="empty-state">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+        <p style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;">Nenhuma requisição registrada</p>
+        <p>Execute o fluxo OAuth2 para começar a ver o histórico aqui.</p>
+    </div>
     {{end}}
 </div>
 

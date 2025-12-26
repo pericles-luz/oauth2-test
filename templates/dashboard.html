@@ -7,19 +7,24 @@
 </div>
 
 {{if .Scopes}}
-<div class="card">
+<div class="card card-highlight">
     <h3>Escopos Solicitados e Dados Obtidos</h3>
     <p style="color: #6b7280; margin-bottom: 1rem;">Relação entre os escopos OAuth2 solicitados e as informações disponibilizadas:</p>
 
     <div style="display: grid; gap: 1rem;">
         {{if contains .Scopes "openid"}}
-        <div style="border-left: 4px solid #2563eb; padding-left: 1rem; background-color: #f9fafb; padding: 1rem; border-radius: 0.25rem;">
-            <div style="font-weight: bold; color: #2563eb; margin-bottom: 0.5rem;">📋 openid</div>
+        <div class="scope-card scope-card-blue">
+            <div style="font-weight: bold; color: #2563eb; margin-bottom: 0.5rem;">
+                <span class="tooltip">
+                    📋 openid
+                    <span class="tooltiptext">Escopo obrigatório para OpenID Connect que fornece o identificador único do usuário</span>
+                </span>
+            </div>
             <div style="font-size: 0.875rem; color: #374151;">
                 Identificador único do usuário
                 {{if .UserInfo.Sub}}
                 <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
-                    ✓ <strong>sub:</strong> {{.UserInfo.Sub}}
+                    ✓ <strong>sub:</strong> <span style="font-family: monospace;">{{.UserInfo.Sub}}</span>
                 </div>
                 {{end}}
             </div>
@@ -27,8 +32,13 @@
         {{end}}
 
         {{if contains .Scopes "profile"}}
-        <div style="border-left: 4px solid #059669; padding-left: 1rem; background-color: #f0fdf4; padding: 1rem; border-radius: 0.25rem;">
-            <div style="font-weight: bold; color: #059669; margin-bottom: 0.5rem;">👤 profile</div>
+        <div class="scope-card scope-card-green">
+            <div style="font-weight: bold; color: #059669; margin-bottom: 0.5rem;">
+                <span class="tooltip">
+                    👤 profile
+                    <span class="tooltiptext">Informações básicas do perfil incluindo nome, CPF e dados da seccional</span>
+                </span>
+            </div>
             <div style="font-size: 0.875rem; color: #374151;">
                 Informações básicas do perfil (nome, CPF, etc.)
                 <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
@@ -40,8 +50,13 @@
         {{end}}
 
         {{if contains .Scopes "email"}}
-        <div style="border-left: 4px solid #dc2626; padding-left: 1rem; background-color: #fef2f2; padding: 1rem; border-radius: 0.25rem;">
-            <div style="font-weight: bold; color: #dc2626; margin-bottom: 0.5rem;">📧 email</div>
+        <div class="scope-card scope-card-red">
+            <div style="font-weight: bold; color: #dc2626; margin-bottom: 0.5rem;">
+                <span class="tooltip">
+                    📧 email
+                    <span class="tooltiptext">Acesso ao endereço de e-mail do usuário e status de verificação</span>
+                </span>
+            </div>
             <div style="font-size: 0.875rem; color: #374151;">
                 Endereço de e-mail e status de verificação
                 {{if .UserInfo.Email}}
@@ -59,8 +74,13 @@
         {{end}}
 
         {{if contains .Scopes "phone"}}
-        <div style="border-left: 4px solid #7c3aed; padding-left: 1rem; background-color: #faf5ff; padding: 1rem; border-radius: 0.25rem;">
-            <div style="font-weight: bold; color: #7c3aed; margin-bottom: 0.5rem;">📱 phone</div>
+        <div class="scope-card scope-card-purple">
+            <div style="font-weight: bold; color: #7c3aed; margin-bottom: 0.5rem;">
+                <span class="tooltip">
+                    📱 phone
+                    <span class="tooltiptext">Acesso ao número de telefone do usuário e status de verificação</span>
+                </span>
+            </div>
             <div style="font-size: 0.875rem; color: #374151;">
                 Número de telefone e status de verificação
                 {{if .UserInfo.PhoneNumber}}
@@ -78,8 +98,13 @@
         {{end}}
 
         {{if contains .Scopes "address"}}
-        <div style="border-left: 4px solid #ea580c; padding-left: 1rem; background-color: #fff7ed; padding: 1rem; border-radius: 0.25rem;">
-            <div style="font-weight: bold; color: #ea580c; margin-bottom: 0.5rem;">🏠 address</div>
+        <div class="scope-card scope-card-orange">
+            <div style="font-weight: bold; color: #ea580c; margin-bottom: 0.5rem;">
+                <span class="tooltip">
+                    🏠 address
+                    <span class="tooltiptext">Informações completas de endereço residencial do usuário</span>
+                </span>
+            </div>
             <div style="font-size: 0.875rem; color: #374151;">
                 Informações de endereço completo
                 {{if .UserInfo.Address}}
@@ -96,8 +121,13 @@
         {{end}}
 
         {{if or (contains .Scopes "union_info") (contains .Scopes "membership")}}
-        <div style="border-left: 4px solid #0891b2; padding-left: 1rem; background-color: #ecfeff; padding: 1rem; border-radius: 0.25rem;">
-            <div style="font-weight: bold; color: #0891b2; margin-bottom: 0.5rem;">🏢 union_info / membership</div>
+        <div class="scope-card scope-card-cyan">
+            <div style="font-weight: bold; color: #0891b2; margin-bottom: 0.5rem;">
+                <span class="tooltip">
+                    🏢 union_info / membership
+                    <span class="tooltiptext">Informações sobre filiação sindical, tipo de vínculo e status de emprego</span>
+                </span>
+            </div>
             <div style="font-size: 0.875rem; color: #374151;">
                 Informações sindicais e de filiação
                 {{if or .UserInfo.MembershipStatus .UserInfo.EmploymentStatus .UserInfo.MembershipType .UserInfo.UnionUnit}}
@@ -117,8 +147,13 @@
         {{end}}
 
         {{if .UserInfo.Permissions}}
-        <div style="border-left: 4px solid #ca8a04; padding-left: 1rem; background-color: #fefce8; padding: 1rem; border-radius: 0.25rem;">
-            <div style="font-weight: bold; color: #ca8a04; margin-bottom: 0.5rem;">🔐 permissions</div>
+        <div class="scope-card scope-card-yellow">
+            <div style="font-weight: bold; color: #ca8a04; margin-bottom: 0.5rem;">
+                <span class="tooltip">
+                    🔐 permissions
+                    <span class="tooltiptext">Permissões e roles específicas concedidas ao usuário no sistema</span>
+                </span>
+            </div>
             <div style="font-size: 0.875rem; color: #374151;">
                 Permissões específicas concedidas
                 <div style="margin-top: 0.5rem; padding: 0.5rem; background-color: white; border-radius: 0.25rem;">
@@ -235,49 +270,79 @@
 </div>
 {{end}}
 
-<div class="card mt-3">
-    <h3>Tokens</h3>
+<details class="card mt-3 collapsible-section" open>
+    <summary>Tokens OAuth2</summary>
 
     <div class="token-section">
         <h4>Access Token</h4>
-        <textarea readonly class="token-field">{{.AccessToken}}</textarea>
+        <div class="token-container">
+            <button class="btn-copy" onclick="copyToken(this)">📋 Copiar</button>
+            <textarea readonly class="token-field">{{.AccessToken}}</textarea>
+        </div>
     </div>
 
     {{if .RefreshToken}}
     <div class="token-section mt-2">
         <h4>Refresh Token</h4>
-        <textarea readonly class="token-field">{{.RefreshToken}}</textarea>
+        <div class="token-container">
+            <button class="btn-copy" onclick="copyToken(this)">📋 Copiar</button>
+            <textarea readonly class="token-field">{{.RefreshToken}}</textarea>
+        </div>
     </div>
     {{end}}
 
     {{if .IDToken}}
     <div class="token-section mt-2">
         <h4>ID Token (JWT)</h4>
-        <textarea readonly class="token-field">{{.IDToken}}</textarea>
+        <div class="token-container">
+            <button class="btn-copy" onclick="copyToken(this)">📋 Copiar</button>
+            <textarea readonly class="token-field">{{.IDToken}}</textarea>
+        </div>
     </div>
     {{end}}
-</div>
+</details>
 
 <div class="card mt-3">
     <h3>Testar Endpoints</h3>
     <p>Use os botões abaixo para testar funcionalidades adicionais do OAuth2.</p>
 
     <div class="button-grid">
-        <button hx-post="/test/refresh" hx-target="#test-result" class="btn btn-secondary">
-            Refresh Token
+        <button hx-post="/test/refresh"
+                hx-target="#test-result"
+                hx-indicator="#loading-indicator"
+                class="btn btn-secondary">
+            <span class="tooltip">
+                Refresh Token
+                <span class="tooltiptext">Renovar o access token usando o refresh token atual</span>
+            </span>
         </button>
 
         <a href="/test/jwks" class="btn btn-secondary">
-            Validar JWT com JWKS
+            <span class="tooltip">
+                Validar JWT com JWKS
+                <span class="tooltiptext">Verificar assinatura do ID Token usando as chaves públicas JWKS</span>
+            </span>
         </a>
 
         <a href="/test/discovery" class="btn btn-secondary">
-            OIDC Discovery
+            <span class="tooltip">
+                OIDC Discovery
+                <span class="tooltiptext">Visualizar documento de descoberta OpenID Connect</span>
+            </span>
         </a>
 
-        <button hx-post="/test/revoke" hx-target="#test-result" hx-confirm="Tem certeza? Isso vai revogar o token e encerrar a sessão." class="btn btn-danger">
+        <button hx-post="/test/revoke"
+                hx-target="#test-result"
+                hx-indicator="#loading-indicator"
+                hx-confirm="⚠️ Tem certeza? Isso vai revogar o token e encerrar a sessão atual."
+                class="btn btn-danger">
             Revogar Token
         </button>
+    </div>
+
+    <div id="loading-indicator" class="htmx-indicator">
+        <div class="spinner"></div>
+        <span>Processando...</span>
     </div>
 
     <div id="test-result" class="mt-3"></div>

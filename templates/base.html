@@ -5,10 +5,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OAuth2 Test Tool - Sindireceita</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#0066cc',
+                            hover: '#0056b3',
+                        },
+                        success: '#28a745',
+                        danger: '#dc3545',
+                        warning: '#ffc107',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom styles -->
     <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/components.css">
+
+    <!-- Highlight.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- HTMX -->
     <script src="/static/js/htmx.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="/static/js/app.js" defer></script>
 </head>
-<body>
+<body class="bg-gray-50">
     <nav class="navbar">
         <div class="container">
             <h1>OAuth2 Test Tool</h1>

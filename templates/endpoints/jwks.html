@@ -1,34 +1,53 @@
 {{define "jwks"}}
 {{template "header" .}}
 
+<!-- Breadcrumbs -->
+<div class="breadcrumbs">
+    <a href="/">Home</a> / <a href="/dashboard">Dashboard</a> / JWKS
+</div>
+
 <div class="page-header">
-    <h2>JWKS - JSON Web Key Set</h2>
+    <h2>
+        <span class="tooltip">
+            JWKS - JSON Web Key Set
+            <span class="tooltiptext">Conjunto de chaves públicas usadas para validar assinaturas de tokens JWT</span>
+        </span>
+    </h2>
     <p>Chaves públicas para validação de assinaturas JWT.</p>
     <a href="/dashboard" class="btn btn-secondary">← Voltar para Dashboard</a>
 </div>
 
-<div class="card">
-    <h3>JWKS Endpoint</h3>
-    <pre class="code-block">{{.JWKS | printf "%+v"}}</pre>
-</div>
+<details class="card collapsible-section" open>
+    <summary>JWKS Endpoint Response</summary>
+    <pre class="code-block"><code class="language-json">{{.JWKS | printf "%+v"}}</code></pre>
+</details>
 
 {{if .Valid}}
-<div class="card mt-3 success-card">
-    <h3>✓ ID Token Validado com Sucesso!</h3>
-    <p>O token JWT foi validado usando as chaves públicas do JWKS.</p>
+<div class="card mt-3 success-card card-highlight">
+    <h3 style="color: #28a745;">✓ ID Token Validado com Sucesso!</h3>
+    <p style="margin-bottom: 1.5rem;">O token JWT foi validado usando as chaves públicas do JWKS.</p>
 
-    <h4>Claims do Token:</h4>
-    <pre class="code-block">{{range $key, $value := .Claims}}{{$key}}: {{$value}}
-{{end}}</pre>
+    <details class="collapsible-section" open>
+        <summary>Claims do Token</summary>
+        <pre class="code-block"><code class="language-json">{{range $key, $value := .Claims}}{{$key}}: {{$value}}
+{{end}}</code></pre>
+    </details>
 </div>
 {{else if .ValidationError}}
-<div class="card mt-3 error-card">
-    <h3>✗ Falha na Validação do Token</h3>
-    <p>{{.ValidationError}}</p>
+<div class="card mt-3 error-card card-highlight">
+    <h3 style="color: #dc3545;">✗ Falha na Validação do Token</h3>
+    <p style="margin-top: 1rem; padding: 1rem; background-color: #f8d7da; border-radius: 4px;">
+        <strong>Erro:</strong> {{.ValidationError}}
+    </p>
 </div>
 {{else}}
 <div class="card mt-3">
-    <p>Nenhum ID Token disponível para validação. Execute o fluxo OAuth2 primeiro.</p>
+    <div class="empty-state" style="padding: 2rem 1rem;">
+        <div style="font-size: 2.5rem; margin-bottom: 1rem;">🔐</div>
+        <p style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;">Nenhum ID Token disponível</p>
+        <p>Execute o fluxo OAuth2 primeiro para validar o token.</p>
+        <a href="/" class="btn btn-primary" style="margin-top: 1rem;">Ir para Configuração</a>
+    </div>
 </div>
 {{end}}
 

@@ -1,16 +1,26 @@
 {{define "discovery"}}
 {{template "header" .}}
 
+<!-- Breadcrumbs -->
+<div class="breadcrumbs">
+    <a href="/">Home</a> / <a href="/dashboard">Dashboard</a> / OIDC Discovery
+</div>
+
 <div class="page-header">
-    <h2>OIDC Discovery</h2>
+    <h2>
+        <span class="tooltip">
+            OIDC Discovery
+            <span class="tooltiptext">Documento de descoberta OpenID Connect contendo todos os endpoints e configurações do servidor</span>
+        </span>
+    </h2>
     <p>Documento de descoberta OpenID Connect (.well-known/openid-configuration)</p>
     <a href="/dashboard" class="btn btn-secondary">← Voltar para Dashboard</a>
 </div>
 
-<div class="card">
-    <h3>OpenID Configuration</h3>
-    <pre class="code-block">{{.DiscoveryJSON}}</pre>
-</div>
+<details class="card collapsible-section" open>
+    <summary>OpenID Configuration (JSON)</summary>
+    <pre class="code-block"><code class="language-json">{{.DiscoveryJSON}}</code></pre>
+</details>
 
 <div class="card mt-3">
     <h3>Endpoints Descobertos</h3>
