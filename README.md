@@ -11,6 +11,30 @@ Ferramenta web para testar e debugar o fluxo OAuth2 do Sindireceita. Implementa 
 - ✅ **Interface HTMX** - SPA-like experience sem JavaScript framework pesado
 - ✅ **Validação JWT** - Valida tokens usando JWKS do servidor
 
+## 📚 Manual de Integração
+
+**Quer integrar OAuth2 do Sindireceita na sua aplicação?**
+
+Criamos um **manual completo de integração** com exemplos práticos em PHP e Next.js:
+
+👉 **[MANUAL_OAUTH2_SINDIRECEITA.md](MANUAL_OAUTH2_SINDIRECEITA.md)** (também disponível em PDF)
+
+O manual inclui:
+
+- **Fluxo Minimalista** - Autenticação básica com validação de token
+  - Exemplo completo em PHP
+  - Exemplo completo em Next.js (App Router)
+- **Fluxo Completo** - Todos os recursos OAuth2/OIDC
+  - Refresh Token (renovação automática)
+  - Token Revocation (logout)
+  - JWKS Validation (validação criptográfica)
+  - OpenID Connect Discovery
+  - UserInfo Endpoint
+  - Exemplos em PHP (OOP) e Next.js (TypeScript)
+- **Documentação de Endpoints** - Todos os 6 endpoints detalhados
+- **Troubleshooting** - Soluções para problemas comuns
+- **Melhores Práticas** - Segurança e performance
+
 ## Requisitos
 
 - Go 1.25+
@@ -120,6 +144,7 @@ Acesse `/history` para ver todas as requisições HTTP capturadas:
 │   ├── dashboard.html
 │   ├── history.html
 │   └── endpoints/
+├── MANUAL_OAUTH2_SINDIRECEITA.md  # Manual de integração completo
 └── go.mod
 ```
 
